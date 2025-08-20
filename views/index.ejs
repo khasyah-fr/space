@@ -3,11 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<%= description %>">
-    <title><%= title %></title>
+    <title>Space.</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        a { margin: 0 5px; text-decoration: none; color: #0077cc; }
+        form { margin-top: 20px; display: flex; flex-direction: column; align-items: center; }
+        input[type=text] { padding: 8px; width: 80%; max-width: 400px; margin-bottom: 10px; }
+        button { padding: 8px 16px; cursor: pointer; }
+        #response { margin-top: 20px; min-height: 50px; }
+    </style>
 </head>
 <body>
-    <h1><%= title %></h1>
-    <p><%= description %></p>
+    <h1>Khasyah</h1>
+    <p></p>
+    <div>
+        <a href="https://github.com/khasyah-fr" target="_blank">GitHub</a>
+        <a href="https://linkedin.com/in/fitra-rahmani" target="_blank">LinkedIn</a>
+        <a href="https://x.com/khasyahfr" target="_blank">Twitter</a>
+    </div>
+
+    <form id="askForm">
+        <input type="text" name="prompt" placeholder="Ask me anything..." required>
+        <button type="submit">Send</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        const form = document.getElementById('askForm');
+        const responseDiv = document.getElementById('response');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const prompt = formData.get('prompt');
+
+            responseDiv.textContent = 'Loading...';
+
+            const res = await fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt })
+            });
+
+            const data = await res.json();
+            responseDiv.textContent = data.answer || 'No response';
+        });
+    </script>
 </body>
 </html>
